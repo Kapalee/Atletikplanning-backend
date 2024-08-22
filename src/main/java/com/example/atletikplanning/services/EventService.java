@@ -17,12 +17,11 @@ public class EventService {
 
     private final EventRepository eventRepository;
     private final TrackRepository trackRepository;
-    private final DisciplineRepository disciplineRepository;
+
 
     public EventService(EventRepository eventRepository, TrackRepository trackRepository, DisciplineRepository disciplineRepository) {
         this.eventRepository = eventRepository;
         this.trackRepository = trackRepository;
-        this.disciplineRepository = disciplineRepository;
     }
 
     public List<Event> getAllEvents() {
@@ -37,34 +36,7 @@ public class EventService {
         eventRepository.deleteById(id);
     }
 
-    @Transactional
-   public Event createEvent(Event event) {
-        Track track = trackRepository.findById(event.getTrack().getId())
-                .orElseThrow(() -> new IllegalArgumentException("Track not found"));
-        Discipline discipline = track.getDiscipline();
-        if (discipline == null || !discipline.getId().equals(event.getDiscipline().getId())) {
-            throw new IllegalArgumentException("The selected track is not suitable for the discipline.");
-        }
-        validateTimeSlotAvailability(track, event.getTimeSlot());
-        event.setTrack(track);
-        event.setDiscipline(discipline);
-        return eventRepository.save(event);
-    }
 
-    // Validation method to ensure the track is suitable for the discipline
-    private void validateTrackAndDiscipline(Track track, Discipline discipline) {
-        if (!track.getDiscipline().getId().equals(discipline.getId())) {
-            throw new IllegalArgumentException("The selected track is not suitable for the discipline.");
-        }
-    }
-
-    // Validation method to ensure the track is available during the desired time slot
-    private void validateTimeSlotAvailability(Track track, TimeSlot timeSlot) {
-        List<Event> conflictingEvents = eventRepository.findConflictingEvents(track.getId(), timeSlot.getStartTime(), timeSlot.getEndTime(), timeSlot.getDate());
-        if (!conflictingEvents.isEmpty()) {
-            throw new IllegalArgumentException("The selected time slot overlaps with another event on the same track.");
-        }
-    }
 
 
     public void updateEvent(Long id, Event event) {

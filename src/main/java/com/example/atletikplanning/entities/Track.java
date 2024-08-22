@@ -1,9 +1,7 @@
 package com.example.atletikplanning.entities;
 
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,18 +15,16 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Track {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "track")
-    @JsonManagedReference("track-events")
     private List<Event> events;
 
     @ManyToOne
-    @JsonBackReference("discipline-tracks")
     private Discipline discipline;
 
     private String type;

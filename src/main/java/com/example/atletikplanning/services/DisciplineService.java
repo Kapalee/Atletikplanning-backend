@@ -21,5 +21,7 @@ public class DisciplineService {
     }
 
 
-
+    public Discipline findById(Long disciplineId) {
+        return disciplineRepository.findById(disciplineId).orElse(null);
+    }
 }
