@@ -16,17 +16,10 @@ public class DisciplineService {
         this.disciplineRepository = disciplineRepository;
     }
 
-    public List<Discipline> findAllDisciplines() {
-        return disciplineRepository.findAll();
-    }
-
     public Discipline create(Discipline discipline) {
         return disciplineRepository.save(discipline);
     }
 
-    public void deleteById(Long id) {
-        disciplineRepository.deleteById(id);
-    }
 
 
 }
