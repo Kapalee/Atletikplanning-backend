@@ -20,8 +20,11 @@ public class DisciplineService {
         return disciplineRepository.save(discipline);
     }
 
-
     public Discipline findById(Long disciplineId) {
         return disciplineRepository.findById(disciplineId).orElse(null);
+    }
+
+    public List<Discipline> getAllDisciplines() {
+        return disciplineRepository.findAll();
     }
 }

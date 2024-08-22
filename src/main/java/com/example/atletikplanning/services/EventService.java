@@ -38,11 +38,30 @@ public class EventService {
     public Event createEventFromDto(EventDto eventDto) {
         Discipline discipline = disciplineRepository.findById(eventDto.getDisciplineId())
                 .orElseThrow(() -> new IllegalArgumentException("Discipline not found"));
+
         Track track = trackRepository.findById(eventDto.getTrackId())
                 .orElseThrow(() -> new IllegalArgumentException("Track not found"));
+
         TimeSlot timeSlot = timeSlotRepository.findById(eventDto.getTimeSlotId())
                 .orElseThrow(() -> new IllegalArgumentException("TimeSlot not found"));
 
+        // Validate that the selected track is suitable for the discipline
+        if (!track.getDiscipline().getId().equals(discipline.getId())) {
+            throw new IllegalArgumentException("The selected track is not suitable for the discipline.");
+        }
+
+        // Validate time slot availability
+        List<Event> conflictingEvents = eventRepository.findConflictingEvents(
+                track.getId(),
+                timeSlot.getStartTime(),
+                timeSlot.getEndTime(),
+                timeSlot.getDate()
+        );
+        if (!conflictingEvents.isEmpty()) {
+            throw new IllegalArgumentException("The selected track is already booked for the given time slot.");
+        }
+
+        // Create the event entity
         Event event = new Event(
                 eventDto.getMinimumDuration(),
                 eventDto.getParticipantsGender(),
@@ -50,14 +69,17 @@ public class EventService {
                 eventDto.getMaximumParticipants()
         );
 
+        // Set the associations
         event.setDiscipline(discipline);
         event.setTrack(track);
         event.setTimeSlot(timeSlot);
 
+        // Save and return the event
         return eventRepository.save(event);
     }
 
-    public void deleteById(Long id) {
+
+    public void deleteEvent(Long id) {
         eventRepository.deleteById(id);
     }
 
