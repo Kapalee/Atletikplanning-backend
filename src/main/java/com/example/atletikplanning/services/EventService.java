@@ -1,11 +1,13 @@
 package com.example.atletikplanning.services;
 
+import com.example.atletikplanning.DTO.EventDto;
 import com.example.atletikplanning.entities.Discipline;
 import com.example.atletikplanning.entities.Event;
 import com.example.atletikplanning.entities.TimeSlot;
 import com.example.atletikplanning.entities.Track;
 import com.example.atletikplanning.repositories.DisciplineRepository;
 import com.example.atletikplanning.repositories.EventRepository;
+import com.example.atletikplanning.repositories.TimeSlotRepository;
 import com.example.atletikplanning.repositories.TrackRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,18 +19,41 @@ public class EventService {
 
     private final EventRepository eventRepository;
     private final TrackRepository trackRepository;
+    private final DisciplineRepository disciplineRepository;
+    private final TimeSlotRepository timeSlotRepository;
 
 
-    public EventService(EventRepository eventRepository, TrackRepository trackRepository, DisciplineRepository disciplineRepository) {
+    public EventService(EventRepository eventRepository, TrackRepository trackRepository, DisciplineRepository disciplineRepository, TimeSlotRepository timeSlotRepository) {
         this.eventRepository = eventRepository;
         this.trackRepository = trackRepository;
+        this.disciplineRepository = disciplineRepository;
+        this.timeSlotRepository = timeSlotRepository;
     }
 
     public List<Event> getAllEvents() {
         return eventRepository.findAll();
     }
 
-    public Event create(Event event) {
+    @Transactional
+    public Event createEventFromDto(EventDto eventDto) {
+        Discipline discipline = disciplineRepository.findById(eventDto.getDisciplineId())
+                .orElseThrow(() -> new IllegalArgumentException("Discipline not found"));
+        Track track = trackRepository.findById(eventDto.getTrackId())
+                .orElseThrow(() -> new IllegalArgumentException("Track not found"));
+        TimeSlot timeSlot = timeSlotRepository.findById(eventDto.getTimeSlotId())
+                .orElseThrow(() -> new IllegalArgumentException("TimeSlot not found"));
+
+        Event event = new Event(
+                eventDto.getMinimumDuration(),
+                eventDto.getParticipantsGender(),
+                eventDto.getParticipantAgeGroup(),
+                eventDto.getMaximumParticipants()
+        );
+
+        event.setDiscipline(discipline);
+        event.setTrack(track);
+        event.setTimeSlot(timeSlot);
+
         return eventRepository.save(event);
     }
 
@@ -48,6 +73,8 @@ public class EventService {
             eventToUpdate.setDiscipline(event.getDiscipline());
             eventToUpdate.setTrack(event.getTrack());
             eventToUpdate.setParticipantAgeGroup(event.getParticipantAgeGroup());
+            eventToUpdate.setParticipantsGender(event.getParticipantsGender());
+            eventToUpdate.setTimeSlot(event.getTimeSlot());
             eventRepository.save(eventToUpdate);
         }
     }
