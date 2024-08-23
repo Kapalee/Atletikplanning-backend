@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @NoArgsConstructor
@@ -27,4 +29,11 @@ public class TimeSlot {
     private int startTime;
     private int endTime;
     private LocalDate date;
+
+    public String getFormattedTimeSlot() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm"); // 24-hour format
+        LocalTime start = LocalTime.of(startTime / 100, startTime % 100);
+        LocalTime end = LocalTime.of(endTime / 100, endTime % 100);
+        return start.format(formatter) + " - " + end.format(formatter);
+    }
 }

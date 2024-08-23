@@ -61,7 +61,7 @@ public class EventService {
             throw new IllegalArgumentException("The selected track is already booked for the given time slot.");
         }
 
-        // Create the event entity
+
         Event event = new Event(
                 eventDto.getMinimumDuration(),
                 eventDto.getParticipantsGender(),
@@ -69,12 +69,12 @@ public class EventService {
                 eventDto.getMaximumParticipants()
         );
 
-        // Set the associations
+
         event.setDiscipline(discipline);
         event.setTrack(track);
         event.setTimeSlot(timeSlot);
 
-        // Save and return the event
+
         return eventRepository.save(event);
     }
 

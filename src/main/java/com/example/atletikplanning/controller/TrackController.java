@@ -4,6 +4,7 @@ package com.example.atletikplanning.controller;
 import com.example.atletikplanning.entities.Track;
 import com.example.atletikplanning.services.TrackService;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,6 +25,8 @@ public class TrackController {
     }
 
 
-
-
+    @GetMapping("/by-discipline/{disciplineId}")
+    public List<Track> getTracksByDiscipline(@PathVariable Long disciplineId) {
+        return trackService.getTracksByDiscipline(disciplineId);
+    }
 }

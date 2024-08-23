@@ -20,8 +20,8 @@ public List<Track> getAllTracks() {
         return trackRepository.findAll();
     }
 
-    public Track findById(Long trackId) {
-        return trackRepository.findById(trackId).orElse(null);
+    public List<Track> getTracksByDiscipline(Long disciplineId) {
+        return trackRepository.findByDisciplineId(disciplineId);
     }
 }
 
