@@ -1,9 +1,31 @@
-CREATE DATABASE atletik_db;
+-- Create the discipline table
+CREATE TABLE IF NOT EXISTS discipline (
+                                          id INT AUTO_INCREMENT PRIMARY KEY,
+                                          name VARCHAR(255) NOT NULL,
+    approx_duration INT NOT NULL
+    );
 
--- Use the database
-USE atletik_db;
+-- Create the track table
+CREATE TABLE IF NOT EXISTS track (
+                                     id INT AUTO_INCREMENT PRIMARY KEY,
+                                     type VARCHAR(50) NOT NULL,
+    shape VARCHAR(50) NOT NULL,
+    surface VARCHAR(50) NOT NULL,
+    length INT NOT NULL,
+    lanes INT NOT NULL,
+    discipline_id INT,
+    FOREIGN KEY (discipline_id) REFERENCES discipline(id)
+    );
 
--- Insert disciplines
+-- Create the time_slot table
+CREATE TABLE IF NOT EXISTS time_slot (
+                                         id INT AUTO_INCREMENT PRIMARY KEY,
+                                         start_time INT NOT NULL,
+                                         end_time INT NOT NULL,
+                                         date DATE NOT NULL
+);
+
+-- Insert data into discipline table
 INSERT INTO discipline (name, approx_duration) VALUES ('100m Sprint', 10);
 INSERT INTO discipline (name, approx_duration) VALUES ('Long Jump', 20);
 INSERT INTO discipline (name, approx_duration) VALUES ('High Jump', 15);
@@ -15,26 +37,19 @@ INSERT INTO discipline (name, approx_duration) VALUES ('1500m Run', 150);
 INSERT INTO discipline (name, approx_duration) VALUES ('200m Sprint', 20);
 INSERT INTO discipline (name, approx_duration) VALUES ('800m Run', 90);
 
--- Track Type, Shape, Surface, Length, Lanes, Discipline ID
-INSERT INTO track (type, shape, surface, length, lanes, discipline_id) VALUES ('Track', 'Straight', 'Synthetic', 100, '6', 1); -- 100m Sprint
-INSERT INTO track (type, shape, surface, length, lanes, discipline_id) VALUES ('Field', 'Straight', 'Sand', 30, '0', 2); -- Long Jump
-INSERT INTO track (type, shape, surface, length, lanes, discipline_id) VALUES ('Field', 'Straight', 'Grass', 20, '0', 3); -- High Jump
-INSERT INTO track (type, shape, surface, length, lanes, discipline_id) VALUES ('Field', 'Straight', 'Grass', 20, '0', 4); -- Pole Vault
-INSERT INTO track (type, shape, surface, length, lanes, discipline_id) VALUES ('Field', 'Oval', 'Grass', 15, '0', 5); -- Shot Put
-INSERT INTO track (type, shape, surface, length, lanes, discipline_id) VALUES ('Field', 'Straight', 'Grass', 50, '0', 6); -- Javelin Throw
-INSERT INTO track (type, shape, surface, length, lanes, discipline_id) VALUES ('Track', 'Oval', 'Synthetic', 400, '8', 7); -- 400m Relay
-INSERT INTO track (type, shape, surface, length, lanes, discipline_id) VALUES ('Track', 'Oval', 'Synthetic', 1500, '8', 8); -- 1500m Run
-INSERT INTO track (type, shape, surface, length, lanes, discipline_id) VALUES ('Track', 'Straight', 'Synthetic', 200, '8', 9); -- 200m Sprint
-INSERT INTO track (type, shape, surface, length, lanes, discipline_id) VALUES ('Track', 'Oval', 'Synthetic', 400, '8', 10); -- 800m Run
+-- Insert data into track table
+INSERT INTO track (type, shape, surface, length, lanes, discipline_id) VALUES ('Track', 'Straight', 'Synthetic', 100, 6, 1); -- 100m Sprint
+INSERT INTO track (type, shape, surface, length, lanes, discipline_id) VALUES ('Field', 'Straight', 'Sand', 30, 0, 2); -- Long Jump
+INSERT INTO track (type, shape, surface, length, lanes, discipline_id) VALUES ('Field', 'Straight', 'Grass', 20, 0, 3); -- High Jump
+INSERT INTO track (type, shape, surface, length, lanes, discipline_id) VALUES ('Field', 'Straight', 'Grass', 20, 0, 4); -- Pole Vault
+INSERT INTO track (type, shape, surface, length, lanes, discipline_id) VALUES ('Field', 'Oval', 'Grass', 15, 0, 5); -- Shot Put
+INSERT INTO track (type, shape, surface, length, lanes, discipline_id) VALUES ('Field', 'Straight', 'Grass', 50, 0, 6); -- Javelin Throw
+INSERT INTO track (type, shape, surface, length, lanes, discipline_id) VALUES ('Track', 'Oval', 'Synthetic', 400, 8, 7); -- 400m Relay
+INSERT INTO track (type, shape, surface, length, lanes, discipline_id) VALUES ('Track', 'Oval', 'Synthetic', 1500, 8, 8); -- 1500m Run
+INSERT INTO track (type, shape, surface, length, lanes, discipline_id) VALUES ('Track', 'Straight', 'Synthetic', 200, 8, 9); -- 200m Sprint
+INSERT INTO track (type, shape, surface, length, lanes, discipline_id) VALUES ('Track', 'Oval', 'Synthetic', 400, 8, 10); -- 800m Run
 
--- Additional Tracks for multiple disciplines
-INSERT INTO track (type, shape, surface, length, lanes, discipline_id) VALUES ('Track', 'Straight', 'Synthetic', 200, '8', 9); -- 200m Sprint
-INSERT INTO track (type, shape, surface, length, lanes, discipline_id) VALUES ('Track', 'Oval', 'Synthetic', 400, '8', 10); -- 800m Run
-INSERT INTO track (type, shape, surface, length, lanes, discipline_id) VALUES ('Track', 'Oval', 'Synthetic', 400, '8', 7); -- 400m Relay
-INSERT INTO track (type, shape, surface, length, lanes, discipline_id) VALUES ('Field', 'Straight', 'Grass', 50, '0', 6); -- Javelin Throw
-INSERT INTO track (type, shape, surface, length, lanes, discipline_id) VALUES ('Field', 'Oval', 'Grass', 15, '0', 5); -- Shot Put
-
--- Timeslot format: Start Time, End Time, Date
+-- Insert data into time_slot table
 INSERT INTO time_slot (start_time, end_time, date) VALUES (900, 1000, '2024-09-01');
 INSERT INTO time_slot (start_time, end_time, date) VALUES (1000, 1100, '2024-09-01');
 INSERT INTO time_slot (start_time, end_time, date) VALUES (1100, 1200, '2024-09-01');
