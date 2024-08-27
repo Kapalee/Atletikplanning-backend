@@ -61,6 +61,15 @@ public class EventService {
             throw new IllegalArgumentException("The selected track is already booked for the given time slot.");
         }
 
+        // Validate that the same event is not scheduled in another time slot or track
+        List<Event> similarEvents = eventRepository.findSimilarEvents(
+                eventDto.getDisciplineId(),
+                eventDto.getParticipantAgeGroup(),
+                eventDto.getParticipantsGender()
+        );
+        if (!similarEvents.isEmpty()) {
+            throw new IllegalArgumentException("An event with the same discipline, participant age group, and gender already exists.");
+        }
 
         Event event = new Event(
                 eventDto.getMinimumDuration(),
@@ -69,11 +78,9 @@ public class EventService {
                 eventDto.getMaximumParticipants()
         );
 
-
         event.setDiscipline(discipline);
         event.setTrack(track);
         event.setTimeSlot(timeSlot);
-
 
         return eventRepository.save(event);
     }

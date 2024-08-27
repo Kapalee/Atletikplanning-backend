@@ -18,4 +18,10 @@ public interface EventRepository extends JpaRepository<Event, Long> {
                                       @Param("startTime") int startTime,
                                       @Param("endTime") int endTime,
                                       @Param("date") LocalDate date);
+
+    @Query("SELECT e FROM Event e WHERE e.discipline.id = :disciplineId AND e.participantAgeGroup = :participantAgeGroup AND e.participantsGender = :participantsGender")
+    List<Event> findSimilarEvents(@Param("disciplineId") Long disciplineId,
+                                  @Param("participantAgeGroup") String participantAgeGroup,
+                                  @Param("participantsGender") String participantsGender);
+
 }
