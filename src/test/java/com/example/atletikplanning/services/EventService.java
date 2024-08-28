@@ -103,4 +103,27 @@ class EventServiceIntegrationTest {
         List<Event> events = eventService.getAllEvents();
         assertFalse(events.isEmpty());
     }
+
+        @Test
+    void testDeleteEvent() {
+        // Create an event to delete
+        EventDto eventDto = new EventDto();
+        eventDto.setDisciplineId(discipline.getId());
+        eventDto.setTrackId(track.getId());
+        eventDto.setTimeSlotId(timeSlot.getId());
+        eventDto.setMinimumDuration(10);
+        eventDto.setParticipantsGender("Male");
+        eventDto.setParticipantAgeGroup("Adult");
+        eventDto.setMaximumParticipants(10);
+        Event createdEvent = eventService.createEventFromDto(eventDto);
+
+        // Ensure the event was created
+        assertNotNull(createdEvent);
+        
+        // Delete the event
+        eventService.deleteEvent(createdEvent.getId());
+
+        // Verify the event no longer exists
+        assertFalse(eventRepository.findById(createdEvent.getId()).isPresent());
+    }
 }

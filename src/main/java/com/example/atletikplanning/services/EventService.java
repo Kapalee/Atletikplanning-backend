@@ -96,11 +96,22 @@ public class EventService {
     public void updateEvent(Long id, Event event) {
         Event eventToUpdate = eventRepository.findById(id).orElse(null);
         if (eventToUpdate != null) {
+            // Fetch discipline and track to validate
+            Discipline discipline = disciplineRepository.findById(event.getDiscipline().getId())
+                    .orElseThrow(() -> new IllegalArgumentException("Discipline not found"));
+            Track track = trackRepository.findById(event.getTrack().getId())
+                    .orElseThrow(() -> new IllegalArgumentException("Track not found"));
+
+            // Validate that the selected track is suitable for the discipline
+            if (!track.getDiscipline().getId().equals(discipline.getId())) {
+                throw new IllegalArgumentException("The selected track is not suitable for the discipline.");
+            }
+
+            // Proceed with the update
             eventToUpdate.setMinimumDuration(event.getMinimumDuration());
-            eventToUpdate.setDiscipline(event.getDiscipline());
+            eventToUpdate.setDiscipline(discipline);
             eventToUpdate.setMaximumParticipants(event.getMaximumParticipants());
-            eventToUpdate.setDiscipline(event.getDiscipline());
-            eventToUpdate.setTrack(event.getTrack());
+            eventToUpdate.setTrack(track);
             eventToUpdate.setParticipantAgeGroup(event.getParticipantAgeGroup());
             eventToUpdate.setParticipantsGender(event.getParticipantsGender());
             eventToUpdate.setTimeSlot(event.getTimeSlot());
